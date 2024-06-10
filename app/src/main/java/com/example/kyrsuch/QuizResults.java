@@ -1,43 +1,42 @@
 package com.example.kyrsuch;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class QuizResults extends AppCompatActivity {
+
+    Button endup;
+    TextView result;
+    Integer value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_quiz_results);
 
-        final AppCompatButton startNewQuiz = findViewById(R.id.startNewQuizBtn);
-        final TextView correctAnswers = findViewById(R.id.correctAnswers);
-        final TextView incorrectAnswers = findViewById(R.id.incorrectAnswers);
+        endup = findViewById(R.id.endup);
+        result = findViewById(R.id.result);
 
-        final int getCorrectAnswers = getIntent().getIntExtra("correct", 0);
-        final int getInCorrectAnswers = getIntent().getIntExtra("incorrect", 0);
-
-        correctAnswers.setText(String.valueOf("Количество верных ответов: " + getCorrectAnswers));
-        incorrectAnswers.setText(String.valueOf("Количество неверных ответов: " + getInCorrectAnswers));
-
-        startNewQuiz.setOnClickListener(new View.OnClickListener() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            value = extras.getInt("result");
+        }
+        result.setText("Ваш результат: " + value.toString() + "/10");
+        endup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(QuizResults.this, MainActivity.class));
+                Intent intent = new Intent(QuizResults.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
-    }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(QuizResults.this, MainActivity.class));
-        finish();
     }
 }

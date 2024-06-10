@@ -115,7 +115,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void selectImage() {
-        // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -126,20 +125,13 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // checking request code and result code
-        // if request code is PICK_IMAGE_REQUEST and
-        // resultCode is RESULT_OK
-        // then set image in the image view
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Get the Uri of data
             filePath = data.getData();
             try {
-                // Setting image on image view using Bitmap
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 binding.avatarImageView.setImageBitmap(bitmap);
             }
             catch (IOException e) {
-                // Log the exception
                 e.printStackTrace();
             }
         }
@@ -147,20 +139,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void uploadImage() {
         if (filePath != null) {
-            // Code for showing progressDialog while uploading
             ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            // Defining the child of storageReference
             StorageReference ref = storageReference.child("user_avatars/" + firebaseAuth.getUid());
 
-            // adding listeners on upload
-            // or failure of image
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // Image uploaded successfully
-                    // Dismiss dialog
                     progressDialog.dismiss();
                     Toast.makeText(SignUpActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
                 }
@@ -172,8 +158,6 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                // Progress Listener for loading
-                // percentage on the dialog box
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
@@ -205,7 +189,6 @@ public class SignUpActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
                     String name = snapshot.child("name").getValue(String.class);
-                    // Используйте phoneNumber по вашему усмотрению
                 }
             }
             @Override
